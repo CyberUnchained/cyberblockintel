@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Shield, Clock, Hash, ExternalLink, Volume2, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { fetchThreatHashes, verifyThreatHash } from '@services/blockchainService';
+import { analyzeThreat } from '@services/aiService';
+import { fetchThreats } from '@services/threatService';
 import { useChatContext } from '../context/ChatContext';
+import ThreatAnalysisModal from './ThreatAnalysisModal';
 import styles from './ThreatFeed.module.css';
 
 // Mock data for threat feed
@@ -194,12 +198,18 @@ const mockExpandedData = {
 const ThreatFeed = () => {
   const navigate = useNavigate();
   const { setThreatForChat } = useChatContext();
-  const [threats, setThreats] = useState(mockThreats);
+  const [threats, setThreats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentSpeech, setCurrentSpeech] = useState(null);
+  
+  // New state for analysis modal
+  const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [currentAnalysis, setCurrentAnalysis] = useState(null);
+  const [selectedThreat, setSelectedThreat] = useState(null);
 
   useEffect(() => {
     loadThreats();
@@ -208,10 +218,8 @@ const ThreatFeed = () => {
   const loadThreats = async () => {
     try {
       setLoading(true);
-      const threatHashes = await fetchThreatHashes();
-      // In a real application, we would process the threat hashes and update the state
-      // For now, we'll just use the mock data
-      setThreats(mockThreats);
+      const response = await fetchThreats();
+      setThreats(response);
     } catch (err) {
       setError('Failed to load threats');
       console.error('Error loading threats:', err);
@@ -230,6 +238,46 @@ const ThreatFeed = () => {
       );
     } catch (err) {
       console.error('Error verifying threat:', err);
+    }
+  };
+
+  const handleAnalyzeThreat = async (threat) => {
+    setSelectedThreat(threat);
+    setIsAnalysisModalOpen(true);
+    setAnalysisLoading(true);
+
+    try {
+      // Combine threat data with expanded data for analysis
+      const threatData = {
+        ...threat,
+        expandedData: mockExpandedData[threat.id]
+      };
+
+      const result = await analyzeThreat(threatData);
+      setCurrentAnalysis(result.summary);
+    } catch (err) {
+      setError('Failed to analyze threat');
+      console.error('Error analyzing threat:', err);
+    } finally {
+      setAnalysisLoading(false);
+    }
+  };
+
+  const handleConfirmAnalysis = () => {
+    if (selectedThreat && currentAnalysis) {
+      // Update the threat in the feed with the analysis
+      setThreats(prevThreats =>
+        prevThreats.map(t =>
+          t.id === selectedThreat.id
+            ? { ...t, analysis: currentAnalysis, analyzed: true }
+            : t
+        )
+      );
+
+      // Close the modal and reset states
+      setIsAnalysisModalOpen(false);
+      setSelectedThreat(null);
+      setCurrentAnalysis(null);
     }
   };
 
@@ -288,8 +336,24 @@ const ThreatFeed = () => {
   };
 
   const handleChatClick = (threat) => {
-    const expandedData = mockExpandedData[threat.id];
-    setThreatForChat(threat, expandedData);
+    const expandedData = mockExpandedData[threat.id] || {};
+    // Pass the threat data with expanded data properly merged
+    setThreatForChat({
+      ...threat,
+      attackVector: expandedData.attackVector || threat.attackVector || 'Unknown',
+      targetSystems: expandedData.targetSystems || threat.targetSystems || 'Not specified',
+      affectedRegions: expandedData.affectedRegions || threat.affectedRegions || 'Global',
+      malwareFamily: expandedData.malwareFamily || threat.malwareFamily || 'Unknown',
+      encryptionMethod: expandedData.encryptionMethod || threat.encryptionMethod || 'Not specified',
+      commandAndControl: expandedData.commandAndControl || threat.commandAndControl || [],
+      indicators: expandedData.indicators || threat.indicators || [],
+      recommendations: expandedData.recommendations || threat.recommendations || [],
+      timeline: {
+        firstSeen: expandedData.timeline?.firstSeen || threat.timestamp,
+        lastSeen: expandedData.timeline?.lastSeen || threat.timestamp,
+        updateFrequency: expandedData.timeline?.updateFrequency || 'As needed'
+      }
+    });
     navigate('/chat');
   };
 
@@ -430,6 +494,14 @@ const ThreatFeed = () => {
                               <Volume2 size={20} />
                             </button>
                             <button 
+                              className={styles.analyzeButton}
+                              onClick={() => handleAnalyzeThreat(threat)}
+                              title="Analyze Threat"
+                            >
+                              <AlertTriangle size={20} />
+                              <span>Analyze Threat</span>
+                            </button>
+                            <button 
                               className={styles.chatButton} 
                               onClick={() => handleChatClick(threat)}
                               title="Chat with AI"
@@ -438,6 +510,15 @@ const ThreatFeed = () => {
                               <span>Chat with AI</span>
                             </button>
                           </div>
+
+                          {threat.analyzed && (
+                            <div className={styles.analysisSection}>
+                              <h4 className={styles.sectionTitle}>AI Analysis</h4>
+                              <div className={styles.analysisContent}>
+                                <ReactMarkdown>{threat.analysis}</ReactMarkdown>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </motion.div>
                     )}
@@ -461,6 +542,14 @@ const ThreatFeed = () => {
           <div className={styles.spinner}></div>
         </div>
       )}
+
+      <ThreatAnalysisModal
+        isOpen={isAnalysisModalOpen}
+        onClose={() => setIsAnalysisModalOpen(false)}
+        analysis={currentAnalysis}
+        onConfirm={handleConfirmAnalysis}
+        isLoading={analysisLoading}
+      />
     </div>
   );
 };

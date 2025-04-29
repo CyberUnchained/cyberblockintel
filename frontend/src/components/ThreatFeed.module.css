@@ -386,4 +386,68 @@
   100% {
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
   }
+}
+
+.analyzeButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.analyzeButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.analysisSection {
+  grid-column: 1 / -1;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(22, 28, 36, 0.6);
+  border: 1px solid rgba(64, 224, 208, 0.1);
+  border-radius: 8px;
+}
+
+.analysisContent {
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.analysisContent h3 {
+  color: #40E0D0;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.analysisContent h4 {
+  color: #00CED1;
+  margin-top: 1.2rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.analysisContent ul {
+  list-style-type: none;
+  padding-left: 1.5rem;
+}
+
+.analysisContent li {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.analysisContent li::before {
+  content: '•';
+  color: #40E0D0;
+  position: absolute;
+  left: -1.2rem;
 } 

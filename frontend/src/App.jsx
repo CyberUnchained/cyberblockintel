@@ -52,8 +52,8 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    <ChatProvider>
-      <Router>
+    <Router>
+      <ChatProvider>
         <div className={styles.appContainer}>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -160,8 +160,8 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
-      </Router>
-    </ChatProvider>
+      </ChatProvider>
+    </Router>
   );
 }
 

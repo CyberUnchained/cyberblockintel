@@ -6,6 +6,7 @@ framer-motion==11.0.8
 firebase==10.8.0
 @vitejs/plugin-react==4.2.1
 vite==5.1.4
+axios
 
 # Development Dependencies
 @types/react==18.2.64

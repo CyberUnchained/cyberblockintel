@@ -1,3 +1,7 @@
+import axios from 'axios';
+
+const API_BASE_URL = 'http://localhost:8000/api/v1';
+
 /**
  * Get a response from the AI assistant
  * @param {string} message - The user's message
@@ -35,34 +39,16 @@ export const getChatResponse = async (message) => {
 };
 
 /**
- * Analyze a threat report using AI
- * @param {Object} threatData - The threat report data
+ * Analyze a threat using the backend AI service
+ * @param {Object} threatData - The threat data to analyze
  * @returns {Promise<Object>} - Promise resolving to the analysis results
  */
-export const analyzeThreatReport = async (threatData) => {
+export const analyzeThreat = async (threatData) => {
   try {
-    // Simulate AI analysis
-    return await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          threatLevel: Math.floor(Math.random() * 3) + 1, // 1-3
-          confidence: Math.floor(Math.random() * 30) + 70, // 70-100%
-          recommendations: [
-            "Isolate affected systems immediately",
-            "Update all security patches",
-            "Monitor network traffic for unusual patterns",
-            "Backup critical data if not already done"
-          ],
-          relatedThreats: [
-            "0x7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b",
-            "0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b"
-          ],
-          timestamp: new Date().toISOString()
-        });
-      }, 2000);
-    });
+    const response = await axios.post(`${API_BASE_URL}/threats/analyze`, threatData);
+    return response.data;
   } catch (error) {
-    console.error('Error analyzing threat report:', error);
-    throw new Error('Failed to analyze threat report');
+    console.error('Error analyzing threat:', error);
+    throw new Error('Failed to analyze threat');
   }
 };

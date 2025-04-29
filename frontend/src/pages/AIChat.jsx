@@ -1,83 +1,89 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Bot, User } from 'lucide-react';
+import { useChatContext } from '../context/ChatContext';
 import styles from './AIChat.module.css';
 
 const AIChat = () => {
-  const [messages, setMessages] = useState([]);
+  const { currentThreat, sendMessage, chatHistory, isLoading, error } = useChatContext();
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatHistory]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
 
-    const userMessage = {
-      id: Date.now(),
-      text: input,
-      sender: 'user',
-      timestamp: new Date().toISOString()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
+    const message = input.trim();
     setInput('');
-    setLoading(true);
-
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage = {
-        id: Date.now() + 1,
-        text: 'This is a simulated AI response. In a real application, this would be connected to an AI service.',
-        sender: 'ai',
-        timestamp: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, aiMessage]);
-      setLoading(false);
-    }, 1000);
+    await sendMessage(message);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>AI Chat Assistant</h1>
-        <p className={styles.subtitle}>Ask questions about threats and get AI-powered insights</p>
+        {currentThreat ? (
+          <p className={styles.subtitle}>
+            Analyzing: {currentThreat.title}
+          </p>
+        ) : (
+          <p className={styles.subtitle}>Select a threat from the feed to start analysis</p>
+        )}
       </div>
 
       <div className={styles.chatContainer}>
         <div className={styles.messagesContainer}>
-          {messages.length === 0 ? (
+          {!currentThreat ? (
             <div className={styles.emptyState}>
               <Bot size={48} />
-              <p>Start a conversation by typing a message below</p>
+              <p>Select a threat from the feed to begin analysis</p>
+            </div>
+          ) : chatHistory.length === 0 ? (
+            <div className={styles.emptyState}>
+              <Bot size={48} />
+              <p>Start a conversation about this threat</p>
             </div>
           ) : (
-            messages.map(message => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`${styles.message} ${message.sender === 'user' ? styles.userMessage : styles.aiMessage}`}
-              >
-                <div className={styles.messageIcon}>
-                  {message.sender === 'user' ? <User size={20} /> : <Bot size={20} />}
+            <>
+              {chatHistory.map((message, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`${styles.message} ${message.role === 'user' ? styles.userMessage : styles.aiMessage}`}
+                >
+                  <div className={styles.messageIcon}>
+                    {message.role === 'user' ? <User size={20} /> : <Bot size={20} />}
+                  </div>
+                  <div className={styles.messageContent}>
+                    <p>{message.content}</p>
+                  </div>
+                </motion.div>
+              ))}
+              {isLoading && (
+                <div className={styles.loadingIndicator}>
+                  <div className={styles.typingIndicator}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                 </div>
-                <div className={styles.messageContent}>
-                  <p>{message.text}</p>
-                  <span className={styles.timestamp}>
-                    {new Date(message.timestamp).toLocaleTimeString()}
-                  </span>
+              )}
+              {error && (
+                <div className={styles.errorMessage}>
+                  {error}
                 </div>
-              </motion.div>
-            ))
-          )}
-          {loading && (
-            <div className={styles.loadingIndicator}>
-              <div className={styles.typingIndicator}>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
+              )}
+              <div ref={messagesEndRef} />
+            </>
           )}
         </div>
 
@@ -86,10 +92,15 @@ const AIChat = () => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message here..."
+            placeholder={currentThreat ? "Ask about this threat..." : "Select a threat first"}
             className={styles.input}
+            disabled={!currentThreat || isLoading}
           />
-          <button type="submit" className={styles.sendButton} disabled={loading}>
+          <button 
+            type="submit" 
+            className={styles.sendButton} 
+            disabled={!currentThreat || isLoading || !input.trim()}
+          >
             <Send size={20} />
           </button>
         </form>
