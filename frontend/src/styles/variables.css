@@ -1,0 +1,56 @@
+:root {
+  /* Base colors */
+  --bg-dark: #0d1117;
+  --bg-darker: #060b14;
+  --text-primary: #e6f1ff;
+  --text-secondary: #8b949e;
+  
+  /* Neon accents */
+  --neon-blue: #00fff2;
+  --neon-pink: #ff00ff;
+  --neon-purple: #b026ff;
+  --neon-green: #00ff9d;
+  
+  /* Severity colors */
+  --severity-critical: #ff4d4d;
+  --severity-high: #ff9933;
+  --severity-medium: #ffcc00;
+  --severity-low: #5efb8f;
+  
+  /* UI elements */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Font sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  
+  /* Z-index layers */
+  --z-modal: 1000;
+  --z-overlay: 900;
+  --z-dropdown: 800;
+  --z-header: 700;
+  --z-base: 1;
+} 

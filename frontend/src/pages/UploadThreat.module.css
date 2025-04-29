@@ -1,0 +1,164 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #3b82f6;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.uploadCard {
+  background-color: #1f2937;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  border: 1px solid #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.uploadIcon {
+  color: #3b82f6;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f9fafb;
+}
+
+.description {
+  color: #9ca3af;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.fileInput {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.fileLabel {
+  display: block;
+  padding: 0.75rem 1rem;
+  background-color: #374151;
+  border: 1px dashed #4b5563;
+  border-radius: 0.5rem;
+  color: #9ca3af;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fileLabel:hover {
+  background-color: #4b5563;
+  border-color: #6b7280;
+  color: #f9fafb;
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.successMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.1);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.uploadButton {
+  padding: 0.75rem 2rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  max-width: 400px;
+}
+
+.uploadButton:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.uploadButton:disabled {
+  background-color: #6b7280;
+  cursor: not-allowed;
+}
+
+.infoCard {
+  background-color: #1f2937;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  border: 1px solid #4b5563;
+}
+
+.infoTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f9fafb;
+}
+
+.infoText {
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.infoList {
+  color: #9ca3af;
+  padding-left: 1.5rem;
+}
+
+.infoList li {
+  margin-bottom: 0.5rem;
+} 
