@@ -2,6 +2,15 @@
 
 A modern, cyberpunk-themed cybersecurity intelligence platform built with React and FastAPI, featuring AI-powered threat analysis and blockchain-based threat verification system.
 
+##Team Name: CyberUnchained
+
+## Team members
+   1.Siddharth S
+   2.San hariharan
+   3.Sanjaykumar DK
+   4.Raghavan V
+
+
 ![BlockIntelAI Dashboard](./docs/dashboard.png)
 
 ## 🚀 Features
@@ -337,6 +346,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Transaction monitoring
 - Event subscription system
 - Blockchain sync status
+
 
 ## 📝 Smart Contract Documentation
 
