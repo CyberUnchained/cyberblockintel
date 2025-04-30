@@ -4,6 +4,7 @@ A modern, cyberpunk-themed cybersecurity intelligence platform built with React 
 
 ## Team Name: CyberUnchained
 
+## college name: Sri Eshwar College of Engineering
 ## Team members
    - 1.Siddharth S
    - 2.San hariharan
